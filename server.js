@@ -1,12 +1,16 @@
-require('dotenv').config()
-const express = require('express')
-const morgan = require('morgan')
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const helmet = require('helmet')
+const cors = require('cors');
+const MOVIELIST = require('./movies-data-small.json');
 
-const app = express()
-app.use(morgan('dev'))
+const app = express();
+app.use(morgan('dev'));
+app.use(helmet())
+app.use(cors());
 
 app.use(function validateBearerToken(req, res, next) {
-    const bearerToken = req.get('Authorization').split(' ')[1]
     const apiToken = process.env.API_TOKEN
     const authToken = req.get('Authorization')
 
@@ -16,15 +20,40 @@ app.use(function validateBearerToken(req, res, next) {
         return res.status(401).json({ error: 'Unauthorized request' })
     }
     next()
-})
+});
+
+app.get('/movie', function handleGetMovies(req, res) {
+    let response = MOVIELIST;
+    
+    //filter movies by genre if genre query param is present
+    if (req.query.genre) {
+        response = response.filter(movie => 
+            //case insensitive searching
+            movie.genre.toLowerCase().includes(req.query.genre.toLowerCase())
+        );
+    }
+
+    //filter movies by country if country query param is present
+    if (req.query.country) {
+        response = response.filter(movie => 
+            //case insensitive searching
+            movie.country.toLowerCase().includes(req.query.country.toLowerCase())
+        );
+    }
+
+    //filter movies by country if country query param is present
+    if (req.query.country) {
+        response = response.filter(movie => 
+            //case insensitive searching
+            movie.country.toLowerCase().includes(req.query.country.toLowerCase())
+        );
+    }
+    
+    res.json(response);
+});
 
 
 
-function handleGetMovie(req, res) {
-    res.send('Here are the movies!');
-}
-
-app.get('/movie', handleGetMovie);
 
 
 
@@ -37,9 +66,8 @@ app.get('/movie', handleGetMovie);
 
 
 
-
-const PORT = 8000
+const PORT = 8000;
 
 app.listen(PORT, () => {
     console.log(`Server listening at http://localhost:${PORT}`)
-})
+});
