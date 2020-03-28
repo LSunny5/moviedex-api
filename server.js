@@ -1,13 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
-const helmet = require('helmet')
+const helmet = require('helmet');
 const cors = require('cors');
 const MOVIELIST = require('./movies-data-small.json');
 
 const app = express();
 app.use(morgan('dev'));
-app.use(helmet())
+app.use(helmet());
 app.use(cors());
 
 app.use(function validateBearerToken(req, res, next) {
@@ -41,30 +41,15 @@ app.get('/movie', function handleGetMovies(req, res) {
         );
     }
 
-    //filter movies by country if country query param is present
-    if (req.query.country) {
-        response = response.filter(movie => 
-            //case insensitive searching
-            movie.country.toLowerCase().includes(req.query.country.toLowerCase())
+    //filter movies by average vote if average vote query param is present
+    //searching for movies with avg_vote >= to given number 
+    if (req.query.avg_vote) {
+        response = response.filter(movie =>
+            Number(movie.avg_vote) >= Number(req.query.avg_vote)
         );
     }
-    
     res.json(response);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const PORT = 8000;
 
