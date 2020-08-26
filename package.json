@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js", 
-    "predeploy": "npm audit", 
+    "dev": "nodemon server.js",
+    "predeploy": "npm audit",
     "deploy": "git push heroku master"
   },
   "keywords": [],
@@ -17,12 +17,13 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dot-prop": "^5.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "helmet": "^3.22.0",
+    "helmet": "^3.23.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.4"
   }
 }
